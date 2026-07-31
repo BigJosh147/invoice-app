@@ -394,6 +394,8 @@
     cursor:pointer; font-family:'Inter',sans-serif;
   }
 
+  #print-root{ display:none; }
+
   @media print{
     @page{ margin:12mm; size:auto; }
     html, body{
@@ -403,19 +405,22 @@
       min-height:0 !important;
       overflow:visible !important;
     }
-    body *{visibility:hidden;}
-    #invoice-paper, #invoice-paper *{visibility:visible;}
-
-    /* Kill every dark wrapper so only the white page prints */
-    #preview-overlay, .preview-wrap{
-      all:unset !important;
+    /* Hide literally everything in normal flow... */
+    body > *{ display:none !important; }
+    /* ...except the plain print target, which lives outside any
+       fixed/scrolling container and so has no phantom scroll offset. */
+    #print-root{
       display:block !important;
-      position:static !important;
       background:#fff !important;
+      color:#1C2333 !important;
     }
-
-    #invoice-paper{
-      position:static !important;
+    #print-root *{ color:inherit; }
+    #print-root .from-details,
+    #print-root .inv-meta,
+    #print-root .inv-totals .r,
+    #print-root .inv-notes{ color:#6B7280 !important; }
+    #print-root .inv-title .label{ color:#A34F22 !important; }
+    #print-root #invoice-paper{
       box-shadow:none !important;
       border:none !important;
       width:auto !important;
@@ -424,18 +429,7 @@
       padding:0 !important;
       background:#fff !important;
       background-image:none !important;
-      color:#1C2333 !important;
-      page-break-inside:avoid;
-      break-inside:avoid;
     }
-    #invoice-paper *{ color:inherit; }
-    #invoice-paper .from-details,
-    #invoice-paper .inv-meta,
-    #invoice-paper .inv-totals .r,
-    #invoice-paper .inv-notes{ color:#6B7280 !important; }
-    #invoice-paper .inv-title .label{ color:#A34F22 !important; }
-
-    .topbar, .generate-bar, .preview-topbar, .preview-actions, #manage-overlay{ display:none !important; }
   }
 </style>
 </head>
@@ -550,6 +544,10 @@
     <button class="btn-pdf" id="savePdfBtn">Save as PDF</button>
   </div>
 </div>
+
+<!-- Print target: plain, non-fixed, outside the overlay's stacking/scroll context.
+     Populated by JS right before printing and left empty otherwise. -->
+<div id="print-root"></div>
 
 <div id="manage-overlay">
   <div class="preview-topbar">
@@ -821,14 +819,15 @@ document.getElementById('savePdfBtn').onclick = ()=>{
   saveState();
   renderBizSwitcher();
 
-  // Reset scroll position on both the overlay and the window itself —
-  // otherwise iOS Safari's print/PDF renderer includes the scrolled-past
-  // space as blank leading pages.
-  const overlay = document.getElementById('preview-overlay');
-  overlay.scrollTop = 0;
-  window.scrollTo(0, 0);
+  // Clone the invoice paper into a plain container outside the fixed
+  // overlay. iOS Safari's print/PDF renderer was producing blank leading
+  // pages when printing content nested inside a position:fixed ancestor —
+  // printing from a plain, normal-flow element avoids that entirely.
+  const printRoot = document.getElementById('print-root');
+  printRoot.innerHTML = '';
+  printRoot.appendChild(document.getElementById('invoice-paper').cloneNode(true));
 
-  // Give the browser a moment to apply the scroll reset before printing.
+  window.scrollTo(0, 0);
   setTimeout(()=>{ window.print(); }, 50);
 };
 
