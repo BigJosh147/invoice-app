@@ -820,7 +820,16 @@ document.getElementById('savePdfBtn').onclick = ()=>{
   b.nextNum = (Number(b.nextNum)||1) + 1;
   saveState();
   renderBizSwitcher();
-  window.print();
+
+  // Reset scroll position on both the overlay and the window itself —
+  // otherwise iOS Safari's print/PDF renderer includes the scrolled-past
+  // space as blank leading pages.
+  const overlay = document.getElementById('preview-overlay');
+  overlay.scrollTop = 0;
+  window.scrollTo(0, 0);
+
+  // Give the browser a moment to apply the scroll reset before printing.
+  setTimeout(()=>{ window.print(); }, 50);
 };
 
 function renderManageList(){
