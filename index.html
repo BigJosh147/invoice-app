@@ -35,26 +35,27 @@
     padding-bottom:env(safe-area-inset-bottom);
   }
 
-  /* App chrome */
   .topbar{
     position:sticky; top:0; z-index:20;
     background:var(--ink);
     color:var(--paper);
     padding:calc(14px + env(safe-area-inset-top)) 18px 14px;
     display:flex; align-items:center; justify-content:space-between;
+    gap:10px;
   }
   .topbar .brand{
     font-family:'Source Serif 4',serif;
     font-size:19px;
     font-weight:600;
     letter-spacing:0.01em;
+    flex-shrink:0;
   }
   .topbar .brand .dot{color:var(--rust);}
   .topbar button.icon-btn{
     background:none;border:none;color:var(--paper);
     font-family:'Inter',sans-serif; font-size:13px; font-weight:500;
-    padding:8px 12px; border-radius:8px; cursor:pointer;
-    opacity:0.85;
+    padding:8px 10px; border-radius:8px; cursor:pointer;
+    opacity:0.85; flex-shrink:0;
   }
   .topbar button.icon-btn:active{background:rgba(255,255,255,0.1);}
 
@@ -72,6 +73,7 @@
     color:var(--paper);
     opacity:0.5;
     margin:22px 4px 10px;
+    display:flex; justify-content:space-between; align-items:center;
   }
   .section-label:first-child{margin-top:4px;}
 
@@ -98,7 +100,7 @@
   input, textarea{
     width:100%;
     font-family:'Inter',sans-serif;
-    font-size:16px; /* prevents iOS zoom on focus */
+    font-size:16px;
     color:var(--ink);
     background:#fff;
     border:1px solid var(--line);
@@ -108,8 +110,50 @@
   }
   input:focus, textarea:focus{border-color:var(--rust); box-shadow:0 0 0 3px rgba(196,98,45,0.12);}
   textarea{resize:vertical; min-height:44px; font-size:14px;}
+  input:disabled{background:#F3F1EA; color:var(--slate-light);}
 
-  /* Line items */
+  .biz-switcher{
+    display:flex; align-items:center; gap:10px;
+    background:var(--paper); border-radius:14px; padding:12px 14px;
+    box-shadow:0 1px 2px rgba(0,0,0,0.15);
+  }
+  .biz-logo-thumb{
+    width:42px; height:42px; border-radius:9px; flex-shrink:0;
+    object-fit:cover; background:#fff; border:1px solid var(--line);
+  }
+  .biz-logo-thumb.placeholder{
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; color:var(--slate-light); font-size:16px;
+  }
+  .biz-switcher select{
+    flex:1; border:none; padding:6px 4px; font-weight:600; font-size:15.5px;
+    background:none;
+  }
+  .biz-switcher .manage-btn{
+    background:var(--rust); color:#fff; border:none; border-radius:8px;
+    padding:8px 12px; font-family:'Inter',sans-serif; font-weight:700; font-size:12px;
+    cursor:pointer; flex-shrink:0;
+  }
+
+  .logo-upload{
+    display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  }
+  .logo-preview{
+    width:60px; height:60px; border-radius:10px; object-fit:cover;
+    background:#fff; border:1px solid var(--line); flex-shrink:0;
+  }
+  .logo-preview.placeholder{
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Source Serif 4',serif; font-weight:700; color:var(--slate-light); font-size:20px;
+  }
+  .logo-actions{display:flex; flex-direction:column; gap:6px;}
+  .logo-actions button{
+    background:#fff; border:1px solid var(--line); border-radius:8px;
+    padding:7px 12px; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600;
+    color:var(--ink); cursor:pointer;
+  }
+  .logo-actions button.remove{color:var(--danger); border-color:#EBC9C2;}
+
   .item{
     border:1px solid var(--line);
     border-radius:10px;
@@ -205,7 +249,6 @@
     color:var(--ink);
   }
 
-  /* ---------- INVOICE PREVIEW (the signature element) ---------- */
   #preview-overlay{
     display:none;
     position:fixed; inset:0; z-index:50;
@@ -245,13 +288,19 @@
     display:flex; justify-content:space-between; align-items:flex-start;
     border-bottom:2px solid var(--ink);
     padding-bottom:16px; margin-bottom:20px;
+    gap:14px;
+  }
+  .inv-head .from-block{display:flex; align-items:flex-start; gap:12px;}
+  .inv-head .from-logo{
+    width:44px; height:44px; border-radius:8px; object-fit:cover; flex-shrink:0;
+    margin-top:2px;
   }
   .inv-head .from-name{font-size:20px; font-weight:700;}
   .inv-head .from-details{
     font-family:'Inter',sans-serif; font-size:12px; color:var(--slate);
     margin-top:4px; white-space:pre-line; line-height:1.5;
   }
-  .inv-title{text-align:right;}
+  .inv-title{text-align:right; flex-shrink:0;}
   .inv-title .label{
     font-family:'Inter',sans-serif; font-size:11px; letter-spacing:0.12em;
     text-transform:uppercase; color:var(--rust-dark); font-weight:700;
@@ -316,6 +365,35 @@
   .btn-pdf{background:var(--rust); color:#fff;}
   .btn-edit{background:rgba(255,255,255,0.1); color:var(--paper);}
 
+  #manage-overlay{
+    display:none;
+    position:fixed; inset:0; z-index:60;
+    background:var(--ink);
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  #manage-overlay.open{display:block;}
+  .manage-list{padding:0 16px 16px;}
+  .biz-row{
+    display:flex; align-items:center; gap:12px;
+    background:var(--paper); border-radius:12px; padding:12px;
+    margin-bottom:10px;
+  }
+  .biz-row .biz-info{flex:1; min-width:0;}
+  .biz-row .biz-info .nm{font-weight:700; font-size:15px;}
+  .biz-row .biz-info .sub{font-size:12px; color:var(--slate); margin-top:1px;}
+  .biz-row button{
+    background:none; border:none; color:var(--slate); font-size:13px; font-weight:600;
+    padding:6px 8px; cursor:pointer;
+  }
+  .biz-row button.edit{color:var(--rust-dark);}
+  .biz-row button.del{color:var(--danger);}
+  .add-biz-btn{
+    width:100%; background:none; border:1.5px dashed rgba(251,249,244,0.3);
+    border-radius:12px; padding:14px; color:var(--paper); font-weight:700; font-size:14px;
+    cursor:pointer; font-family:'Inter',sans-serif;
+  }
+
   @media print{
     body *{visibility:hidden;}
     #invoice-paper, #invoice-paper *{visibility:visible;}
@@ -328,15 +406,16 @@
 
 <div class="topbar">
   <div class="brand">Invoice<span class="dot">.</span></div>
-  <button class="icon-btn" id="resetBtn">Clear</button>
+  <button class="icon-btn" id="resetBtn">Clear items</button>
 </div>
 
 <main>
 
-  <div class="section-label">From</div>
-  <div class="card">
-    <div class="field"><label>Your name / business</label><input id="fromName" placeholder="JoDrive"></div>
-    <div class="field"><label>Contact details</label><textarea id="fromDetails" placeholder="Phone, email, address&#10;(one per line)"></textarea></div>
+  <div class="section-label" style="margin-top:4px;">Business</div>
+  <div class="biz-switcher">
+    <img class="biz-logo-thumb placeholder" id="bizThumb" alt="">
+    <select id="bizSelect"></select>
+    <button class="manage-btn" id="manageBtn">Manage</button>
   </div>
 
   <div class="section-label">Bill to</div>
@@ -348,7 +427,7 @@
   <div class="section-label">Invoice details</div>
   <div class="card">
     <div class="row2">
-      <div class="field"><label>Invoice #</label><input id="invNum" placeholder="INV-001"></div>
+      <div class="field"><label>Invoice #</label><input id="invNum" placeholder="INV-001" disabled></div>
       <div class="field"><label>Date</label><input id="invDate" type="date"></div>
     </div>
     <div class="field"><label>Currency</label>
@@ -385,7 +464,6 @@
   <button class="generate-btn" id="previewBtn">Preview & Save as PDF</button>
 </div>
 
-<!-- Preview overlay -->
 <div id="preview-overlay">
   <div class="preview-topbar">
     <button id="closePreview">← Edit</button>
@@ -394,9 +472,12 @@
   <div class="preview-wrap">
     <div id="invoice-paper">
       <div class="inv-head">
-        <div>
-          <div class="from-name" id="p-fromName">Your Business</div>
-          <div class="from-details" id="p-fromDetails"></div>
+        <div class="from-block">
+          <img id="p-fromLogo" class="from-logo" style="display:none;" alt="">
+          <div>
+            <div class="from-name" id="p-fromName">Your Business</div>
+            <div class="from-details" id="p-fromDetails"></div>
+          </div>
         </div>
         <div class="inv-title">
           <div class="label">Invoice</div>
@@ -433,52 +514,136 @@
   </div>
 </div>
 
+<div id="manage-overlay">
+  <div class="preview-topbar">
+    <button id="closeManage">← Back</button>
+    <div style="font-family:'Inter',sans-serif;font-size:12px;color:rgba(251,249,244,0.6);font-weight:600;">BUSINESSES</div>
+  </div>
+  <div class="manage-list" id="manageList"></div>
+  <div style="padding:0 16px 30px;">
+    <button class="add-biz-btn" id="addBizBtn">+ Add new business</button>
+  </div>
+
+  <div id="bizForm" style="display:none; padding:0 16px 40px;">
+    <div class="section-label" id="bizFormTitle" style="margin-top:0;">Edit business</div>
+    <div class="card">
+      <div class="logo-upload">
+        <img class="logo-preview placeholder" id="logoPreview" alt="">
+        <div class="logo-actions">
+          <button type="button" id="uploadLogoBtn">Upload logo</button>
+          <button type="button" class="remove" id="removeLogoBtn">Remove logo</button>
+        </div>
+        <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
+      </div>
+      <div class="field"><label>Business name</label><input id="f-name" placeholder="e.g. JoDrive"></div>
+      <div class="field"><label>Contact details</label><textarea id="f-details" placeholder="Phone, email, address&#10;(one per line)"></textarea></div>
+      <div class="field"><label>Invoice number prefix</label><input id="f-prefix" placeholder="e.g. JD"></div>
+      <div class="field"><label>Next invoice number</label><input id="f-nextnum" type="number" inputmode="numeric" min="1"></div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:14px;">
+      <button id="cancelBizForm" style="flex:1; padding:14px; border-radius:12px; background:rgba(255,255,255,0.1); color:var(--paper); border:none; font-family:'Inter',sans-serif; font-weight:700; font-size:14.5px;">Cancel</button>
+      <button id="saveBizForm" style="flex:1; padding:14px; border-radius:12px; background:var(--rust); color:#fff; border:none; font-family:'Inter',sans-serif; font-weight:700; font-size:14.5px;">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const STORAGE_KEY = 'invoice-app-data-v1';
+const STORAGE_KEY = 'invoice-app-data-v2';
 
 function uid(){ return Math.random().toString(36).slice(2,9); }
 
-let state = {
-  fromName:'', fromDetails:'', toName:'', toDetails:'',
-  invNum:'', invDate:'', currency:'₦',
+function defaultBusiness(name){
+  return { id: uid(), name: name||'', details:'', logo:'', prefix:'INV', nextNum:1 };
+}
+
+let app = {
+  businesses: [],
+  activeBizId: null,
+  toName:'', toDetails:'', invDate:'', currency:'₦',
   taxPct:0, discPct:0, notes:'',
   items:[{id:uid(), desc:'', qty:1, price:0}]
 };
 
+let editingBizId = null;
+
 function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw){ const parsed = JSON.parse(raw); state = Object.assign(state, parsed); }
+    if(raw){ const parsed = JSON.parse(raw); app = Object.assign(app, parsed); }
   }catch(e){}
-  if(!state.items || state.items.length===0){ state.items=[{id:uid(), desc:'', qty:1, price:0}]; }
-  if(!state.invDate){ state.invDate = new Date().toISOString().slice(0,10); }
-  if(!state.invNum){ state.invNum = 'INV-' + Math.floor(1000+Math.random()*9000); }
+
+  if(!app.businesses || app.businesses.length===0){
+    app.businesses = [defaultBusiness('My Business')];
+  }
+  if(!app.activeBizId || !app.businesses.find(b=>b.id===app.activeBizId)){
+    app.activeBizId = app.businesses[0].id;
+  }
+  if(!app.items || app.items.length===0){ app.items=[{id:uid(), desc:'', qty:1, price:0}]; }
+  if(!app.invDate){ app.invDate = new Date().toISOString().slice(0,10); }
 }
+
 function saveState(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(app));
+}
+
+function activeBiz(){
+  return app.businesses.find(b=>b.id===app.activeBizId) || app.businesses[0];
+}
+
+function currentInvNum(){
+  const b = activeBiz();
+  const num = String(b.nextNum||1).padStart(3,'0');
+  return (b.prefix ? b.prefix+'-' : '') + num;
 }
 
 function fmt(n){
-  const cur = state.currency || '₦';
+  const cur = app.currency || '₦';
   const val = isFinite(n) ? n : 0;
   return cur + val.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
 function calc(){
-  const subtotal = state.items.reduce((s,it)=> s + (Number(it.qty)||0)*(Number(it.price)||0), 0);
-  const tax = subtotal * (Number(state.taxPct)||0)/100;
-  const disc = subtotal * (Number(state.discPct)||0)/100;
+  const subtotal = app.items.reduce((s,it)=> s + (Number(it.qty)||0)*(Number(it.price)||0), 0);
+  const tax = subtotal * (Number(app.taxPct)||0)/100;
+  const disc = subtotal * (Number(app.discPct)||0)/100;
   const grand = subtotal + tax - disc;
   return {subtotal, tax, disc, grand};
 }
 
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderBizSwitcher(){
+  const sel = document.getElementById('bizSelect');
+  sel.innerHTML = app.businesses.map(b=>`<option value="${b.id}" ${b.id===app.activeBizId?'selected':''}>${escapeHtml(b.name||'Untitled business')}</option>`).join('');
+  const thumb = document.getElementById('bizThumb');
+  const b = activeBiz();
+  if(b.logo){
+    thumb.src = b.logo;
+    thumb.classList.remove('placeholder');
+    thumb.textContent = '';
+  } else {
+    thumb.removeAttribute('src');
+    thumb.classList.add('placeholder');
+    thumb.textContent = (b.name||'?').charAt(0).toUpperCase();
+  }
+  document.getElementById('invNum').value = currentInvNum();
+}
+
+document.getElementById('bizSelect').addEventListener('change', (e)=>{
+  app.activeBizId = e.target.value;
+  saveState();
+  renderBizSwitcher();
+});
+
 function renderItems(){
   const list = document.getElementById('itemsList');
   list.innerHTML = '';
-  state.items.forEach((item)=>{
+  app.items.forEach((item)=>{
     const div = document.createElement('div');
     div.className = 'item';
-    const lineTotal = (Number(item.qty)||0)*(Number(item.price)||0);
+    div.dataset.id = item.id;
     div.innerHTML = `
       <button class="remove-item" data-id="${item.id}" aria-label="Remove item">✕</button>
       <div class="item-grid">
@@ -489,7 +654,7 @@ function renderItems(){
         <div class="item-row-nums">
           <div><label>Qty</label><input type="number" inputmode="decimal" class="it-qty" data-id="${item.id}" value="${item.qty}" min="0"></div>
           <div><label>Price</label><input type="number" inputmode="decimal" class="it-price" data-id="${item.id}" value="${item.price}" min="0"></div>
-          <div><label>&nbsp;</label><div class="line-total">${fmt(lineTotal)}</div></div>
+          <div><label>&nbsp;</label><div class="line-total" data-linetotal="${item.id}">${fmt((Number(item.qty)||0)*(Number(item.price)||0))}</div></div>
         </div>
       </div>
     `;
@@ -498,8 +663,8 @@ function renderItems(){
 
   list.querySelectorAll('.remove-item').forEach(btn=>{
     btn.onclick = ()=>{
-      if(state.items.length===1) return;
-      state.items = state.items.filter(i=>i.id!==btn.dataset.id);
+      if(app.items.length===1) return;
+      app.items = app.items.filter(i=>i.id!==btn.dataset.id);
       renderItems(); updateTotals(); saveState();
     };
   });
@@ -507,14 +672,28 @@ function renderItems(){
     el.oninput = ()=>{ findItem(el.dataset.id).desc = el.value; saveState(); };
   });
   list.querySelectorAll('.it-qty').forEach(el=>{
-    el.oninput = ()=>{ findItem(el.dataset.id).qty = el.value; renderItems(); updateTotals(); saveState(); el.focus(); };
+    el.oninput = ()=>{
+      findItem(el.dataset.id).qty = el.value;
+      updateLineTotal(el.dataset.id);
+      updateTotals(); saveState();
+    };
   });
   list.querySelectorAll('.it-price').forEach(el=>{
-    el.oninput = ()=>{ findItem(el.dataset.id).price = el.value; renderItems(); updateTotals(); saveState(); el.focus(); };
+    el.oninput = ()=>{
+      findItem(el.dataset.id).price = el.value;
+      updateLineTotal(el.dataset.id);
+      updateTotals(); saveState();
+    };
   });
 }
 
-function findItem(id){ return state.items.find(i=>i.id===id); }
+function updateLineTotal(itemId){
+  const item = findItem(itemId);
+  const el = document.querySelector(`[data-linetotal="${itemId}"]`);
+  if(el) el.textContent = fmt((Number(item.qty)||0)*(Number(item.price)||0));
+}
+
+function findItem(id){ return app.items.find(i=>i.id===id); }
 
 function updateTotals(){
   const {subtotal, grand} = calc();
@@ -522,48 +701,57 @@ function updateTotals(){
   document.getElementById('grandDisplay').textContent = fmt(grand);
 }
 
-function escapeHtml(s){
-  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
 function bindFields(){
-  const map = {
-    fromName:'fromName', fromDetails:'fromDetails', toName:'toName', toDetails:'toDetails',
-    invNum:'invNum', invDate:'invDate', currency:'currency', taxPct:'taxPct', discPct:'discPct', notes:'notes'
-  };
+  const map = { toName:'toName', toDetails:'toDetails', invDate:'invDate', currency:'currency', taxPct:'taxPct', discPct:'discPct', notes:'notes' };
   Object.keys(map).forEach(key=>{
     const el = document.getElementById(map[key]);
-    el.value = state[key];
+    el.value = app[key];
     el.addEventListener('input', ()=>{
-      state[key] = el.value;
-      renderItems(); updateTotals(); saveState();
+      app[key] = el.value;
+      if(key==='currency'){ updateTotals(); renderItems(); }
+      else if(key==='taxPct' || key==='discPct'){ updateTotals(); }
+      saveState();
     });
   });
 }
 
 document.getElementById('addItemBtn').onclick = ()=>{
-  state.items.push({id:uid(), desc:'', qty:1, price:0});
+  app.items.push({id:uid(), desc:'', qty:1, price:0});
   renderItems(); updateTotals(); saveState();
 };
 
 document.getElementById('resetBtn').onclick = ()=>{
-  if(confirm('Clear all fields and start a new invoice?')){
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
+  if(confirm('Clear the current invoice items and client info? (Business profiles are kept.)')){
+    app.toName=''; app.toDetails=''; app.notes=''; app.taxPct=0; app.discPct=0;
+    app.items=[{id:uid(), desc:'', qty:1, price:0}];
+    app.invDate = new Date().toISOString().slice(0,10);
+    saveState();
+    document.getElementById('toName').value='';
+    document.getElementById('toDetails').value='';
+    document.getElementById('notes').value='';
+    document.getElementById('taxPct').value=0;
+    document.getElementById('discPct').value=0;
+    document.getElementById('invDate').value=app.invDate;
+    renderItems(); updateTotals();
   }
 };
 
 function buildPreview(){
   const {subtotal, tax, disc, grand} = calc();
-  document.getElementById('p-fromName').textContent = state.fromName || 'Your Business';
-  document.getElementById('p-fromDetails').textContent = state.fromDetails || '';
-  document.getElementById('p-invNum').textContent = state.invNum || '—';
-  document.getElementById('p-invDate').textContent = state.invDate ? new Date(state.invDate+'T00:00:00').toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}) : '—';
-  document.getElementById('p-toName').textContent = state.toName || 'Client name';
+  const b = activeBiz();
+
+  const logoEl = document.getElementById('p-fromLogo');
+  if(b.logo){ logoEl.src = b.logo; logoEl.style.display='block'; } else { logoEl.style.display='none'; }
+
+  document.getElementById('p-fromName').textContent = b.name || 'Your Business';
+  document.getElementById('p-fromDetails').textContent = b.details || '';
+  document.getElementById('p-invNum').textContent = currentInvNum();
+  document.getElementById('p-invDate').textContent = app.invDate ? new Date(app.invDate+'T00:00:00').toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}) : '—';
+  document.getElementById('p-toName').textContent = app.toName || 'Client name';
 
   const body = document.getElementById('p-itemsBody');
   body.innerHTML = '';
-  state.items.forEach(it=>{
+  app.items.forEach(it=>{
     const lt = (Number(it.qty)||0)*(Number(it.price)||0);
     const tr = document.createElement('tr');
     tr.innerHTML = `<td class="desc">${escapeHtml(it.desc)||'—'}</td><td class="num">${it.qty||0}</td><td class="num">${fmt(Number(it.price)||0)}</td><td class="num">${fmt(lt)}</td>`;
@@ -573,13 +761,13 @@ function buildPreview(){
   document.getElementById('p-subtotal').textContent = fmt(subtotal);
   const taxRow = document.getElementById('p-taxRow');
   const discRow = document.getElementById('p-discRow');
-  if(Number(state.taxPct)>0){ taxRow.style.display='flex'; document.getElementById('p-tax').textContent = fmt(tax); } else { taxRow.style.display='none'; }
-  if(Number(state.discPct)>0){ discRow.style.display='flex'; document.getElementById('p-disc').textContent = '−'+fmt(disc); } else { discRow.style.display='none'; }
+  if(Number(app.taxPct)>0){ taxRow.style.display='flex'; document.getElementById('p-tax').textContent = fmt(tax); } else { taxRow.style.display='none'; }
+  if(Number(app.discPct)>0){ discRow.style.display='flex'; document.getElementById('p-disc').textContent = '−'+fmt(disc); } else { discRow.style.display='none'; }
   document.getElementById('p-grand').textContent = fmt(grand);
 
   const notesEl = document.getElementById('p-notes');
-  notesEl.textContent = state.notes || '';
-  notesEl.style.display = state.notes ? 'block' : 'none';
+  notesEl.textContent = app.notes || '';
+  notesEl.style.display = app.notes ? 'block' : 'none';
 }
 
 document.getElementById('previewBtn').onclick = ()=>{
@@ -591,16 +779,156 @@ document.getElementById('backEdit').onclick = closePreview;
 function closePreview(){ document.getElementById('preview-overlay').classList.remove('open'); }
 
 document.getElementById('savePdfBtn').onclick = ()=>{
+  const b = activeBiz();
+  b.nextNum = (Number(b.nextNum)||1) + 1;
+  saveState();
+  renderBizSwitcher();
   window.print();
 };
 
-// init
+function renderManageList(){
+  const list = document.getElementById('manageList');
+  list.innerHTML = '';
+  app.businesses.forEach(b=>{
+    const row = document.createElement('div');
+    row.className = 'biz-row';
+    const logoImg = b.logo ? `<img src="${b.logo}" style="width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;">` : `<div style="width:36px;height:36px;border-radius:8px;background:#EFEAE0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Source Serif 4',serif;font-weight:700;color:#9CA3AF;">${(b.name||'?').charAt(0).toUpperCase()}</div>`;
+    row.innerHTML = `
+      ${logoImg}
+      <div class="biz-info">
+        <div class="nm">${escapeHtml(b.name||'Untitled business')}</div>
+        <div class="sub">Next invoice: ${(b.prefix?b.prefix+'-':'')}${String(b.nextNum||1).padStart(3,'0')}</div>
+      </div>
+      <button class="edit" data-id="${b.id}">Edit</button>
+      <button class="del" data-id="${b.id}">Delete</button>
+    `;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('.edit').forEach(btn=>{ btn.onclick = ()=> openBizForm(btn.dataset.id); });
+  list.querySelectorAll('.del').forEach(btn=>{
+    btn.onclick = ()=>{
+      if(app.businesses.length===1){ alert("You need at least one business."); return; }
+      if(confirm('Delete this business? This cannot be undone.')){
+        app.businesses = app.businesses.filter(b=>b.id!==btn.dataset.id);
+        if(app.activeBizId===btn.dataset.id){ app.activeBizId = app.businesses[0].id; }
+        saveState();
+        renderManageList(); renderBizSwitcher();
+      }
+    };
+  });
+}
+
+let pendingLogoData = '';
+
+function openBizForm(bizId){
+  editingBizId = bizId || null;
+  const b = bizId ? app.businesses.find(x=>x.id===bizId) : defaultBusiness('');
+  pendingLogoData = b.logo || '';
+
+  document.getElementById('bizFormTitle').textContent = bizId ? 'Edit business' : 'New business';
+  document.getElementById('f-name').value = b.name || '';
+  document.getElementById('f-details').value = b.details || '';
+  document.getElementById('f-prefix').value = b.prefix || '';
+  document.getElementById('f-nextnum').value = b.nextNum || 1;
+  updateLogoPreview();
+
+  document.getElementById('manageList').style.display='none';
+  document.getElementById('addBizBtn').style.display='none';
+  document.getElementById('bizForm').style.display='block';
+}
+
+function updateLogoPreview(){
+  const el = document.getElementById('logoPreview');
+  if(pendingLogoData){
+    el.src = pendingLogoData;
+    el.classList.remove('placeholder');
+    el.textContent = '';
+  } else {
+    el.removeAttribute('src');
+    el.classList.add('placeholder');
+    el.textContent = (document.getElementById('f-name').value||'?').charAt(0).toUpperCase();
+  }
+}
+
+document.getElementById('f-name').addEventListener('input', ()=>{
+  if(!pendingLogoData) updateLogoPreview();
+});
+
+document.getElementById('uploadLogoBtn').onclick = ()=> document.getElementById('logoFileInput').click();
+document.getElementById('logoFileInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 2*1024*1024){ alert('Please choose an image under 2MB.'); return; }
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const canvas = document.createElement('canvas');
+      const maxDim = 200;
+      let w = img.width, h = img.height;
+      if(w>h){ if(w>maxDim){ h = h*(maxDim/w); w = maxDim; } } else { if(h>maxDim){ w = w*(maxDim/h); h = maxDim; } }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      pendingLogoData = canvas.toDataURL('image/png');
+      updateLogoPreview();
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('removeLogoBtn').onclick = ()=>{
+  pendingLogoData = '';
+  document.getElementById('logoFileInput').value = '';
+  updateLogoPreview();
+};
+
+document.getElementById('addBizBtn').onclick = ()=> openBizForm(null);
+document.getElementById('cancelBizForm').onclick = closeBizForm;
+function closeBizForm(){
+  document.getElementById('bizForm').style.display='none';
+  document.getElementById('manageList').style.display='block';
+  document.getElementById('addBizBtn').style.display='block';
+}
+
+document.getElementById('saveBizForm').onclick = ()=>{
+  const name = document.getElementById('f-name').value.trim();
+  if(!name){ alert('Please enter a business name.'); return; }
+  const details = document.getElementById('f-details').value;
+  const prefix = document.getElementById('f-prefix').value.trim();
+  const nextNum = Math.max(1, parseInt(document.getElementById('f-nextnum').value)||1);
+
+  if(editingBizId){
+    const b = app.businesses.find(x=>x.id===editingBizId);
+    b.name = name; b.details = details; b.prefix = prefix; b.nextNum = nextNum; b.logo = pendingLogoData;
+  } else {
+    const b = defaultBusiness(name);
+    b.details = details; b.prefix = prefix; b.nextNum = nextNum; b.logo = pendingLogoData;
+    app.businesses.push(b);
+    app.activeBizId = b.id;
+  }
+  saveState();
+  closeBizForm();
+  renderManageList();
+  renderBizSwitcher();
+};
+
+document.getElementById('manageBtn').onclick = ()=>{
+  renderManageList();
+  document.getElementById('bizForm').style.display='none';
+  document.getElementById('manageList').style.display='block';
+  document.getElementById('addBizBtn').style.display='block';
+  document.getElementById('manage-overlay').classList.add('open');
+};
+document.getElementById('closeManage').onclick = ()=>{
+  document.getElementById('manage-overlay').classList.remove('open');
+};
+
 loadState();
 bindFields();
+renderBizSwitcher();
 renderItems();
 updateTotals();
 
-// Register service worker for offline / installability
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('sw.js').catch(()=>{});

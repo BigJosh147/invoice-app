@@ -1,4 +1,4 @@
-const CACHE_NAME = 'invoice-app-v1';
+const CACHE_NAME = 'invoice-app-v2';
 const ASSETS = [
   './index.html',
   './manifest.json',
